@@ -1,0 +1,616 @@
+  [1m[35m (1.5ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (9.9ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (8.4ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateTasks (20201022080007)
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "tasks" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar, "description" varchar, "active" boolean, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mprimary::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20201022080007"]]
+  [1m[35m (8.8ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.7ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.8ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["key", "environment"], ["value", "development"], ["created_at", "2020-10-22 08:00:57.449042"], ["updated_at", "2020-10-22 08:00:57.449042"]]
+  [1m[35m (6.6ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (1.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (1.1ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTask Create (0.7ms)[0m  [1m[32mINSERT INTO "tasks" ("title", "description", "active", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["title", "The First One"], ["description", "Do a To-DO app"], ["active", 1], ["created_at", "2020-10-22 08:25:18.381112"], ["updated_at", "2020-10-22 08:25:18.381112"]]
+  [1m[35m (9.1ms)[0m  [1m[36mcommit transaction[0m
+Started GET "/" for ::1 at 2020-10-22 11:25:29 +0300
+  [1m[35m (2.0ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Rails::WelcomeController#index as HTML
+  Rendering /home/falren/.rbenv/versions/2.7.1/lib/ruby/gems/2.7.0/gems/railties-6.0.3.4/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered /home/falren/.rbenv/versions/2.7.1/lib/ruby/gems/2.7.0/gems/railties-6.0.3.4/lib/rails/templates/rails/welcome/index.html.erb (Duration: 19.2ms | Allocations: 407)
+Completed 200 OK in 46ms (Views: 34.5ms | ActiveRecord: 0.0ms | Allocations: 2240)
+
+
+Started GET "/tasks/1" for ::1 at 2020-10-22 11:25:41 +0300
+Processing by TasksController#show as HTML
+  Parameters: {"id"=>"1"}
+Completed 500 Internal Server Error in 60ms (ActiveRecord: 0.0ms | Allocations: 15768)
+
+
+  
+NoMethodError (undefined method `fomat=' for #<ActionDispatch::Request:0x00005612c2b81250>
+Did you mean?  format=
+               formats=
+               format
+               formats):
+  
+app/controllers/api_controller.rb:8:in `set_default_format'
+Started GET "/tasks/1" for ::1 at 2020-10-22 11:25:50 +0300
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+Processing by TasksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mTask Load (0.3ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/tasks_controller.rb:24:in `find_task'
+Completed 204 No Content in 24ms (ActiveRecord: 2.1ms | Allocations: 5163)
+
+
+Started GET "/tasks/1" for ::1 at 2020-10-22 11:25:52 +0300
+Processing by TasksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mTask Load (0.5ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/tasks_controller.rb:24:in `find_task'
+Completed 204 No Content in 6ms (ActiveRecord: 0.5ms | Allocations: 581)
+
+
+Started GET "/tasks/1" for ::1 at 2020-10-22 11:25:52 +0300
+Processing by TasksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mTask Load (0.3ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/tasks_controller.rb:24:in `find_task'
+Completed 204 No Content in 3ms (ActiveRecord: 0.3ms | Allocations: 581)
+
+
+Started GET "/tasks/1" for ::1 at 2020-10-22 11:25:52 +0300
+Processing by TasksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mTask Load (0.3ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/tasks_controller.rb:24:in `find_task'
+Completed 204 No Content in 4ms (ActiveRecord: 0.3ms | Allocations: 566)
+
+
+Started GET "/tasks/1" for ::1 at 2020-10-22 11:25:52 +0300
+Processing by TasksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mTask Load (0.5ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/tasks_controller.rb:24:in `find_task'
+Completed 204 No Content in 6ms (ActiveRecord: 0.5ms | Allocations: 566)
+
+
+Started GET "/tasks/1" for ::1 at 2020-10-22 11:26:01 +0300
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+Processing by TasksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mTask Load (0.4ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/tasks_controller.rb:24:in `find_task'
+Completed 204 No Content in 20ms (ActiveRecord: 1.5ms | Allocations: 4503)
+
+
+Started GET "/tasks/1" for ::1 at 2020-10-22 11:26:48 +0300
+Processing by TasksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mTask Load (0.5ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/tasks_controller.rb:24:in `find_task'
+Completed 204 No Content in 6ms (ActiveRecord: 0.5ms | Allocations: 566)
+
+
+Started GET "/task/1" for ::1 at 2020-10-22 11:27:52 +0300
+  
+ActionController::RoutingError (No route matches [GET] "/task/1"):
+  
+actionpack (6.0.3.4) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.4) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.4) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.4) lib/rails/engine.rb:527:in `call'
+puma (4.3.6) lib/puma/configuration.rb:228:in `call'
+puma (4.3.6) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.6) lib/puma/server.rb:472:in `process_client'
+puma (4.3.6) lib/puma/server.rb:328:in `block in run'
+puma (4.3.6) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started GET "/task/1" for ::1 at 2020-10-22 11:27:52 +0300
+  
+ActionController::RoutingError (No route matches [GET] "/task/1"):
+  
+actionpack (6.0.3.4) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.4) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.4) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.4) lib/rails/engine.rb:527:in `call'
+puma (4.3.6) lib/puma/configuration.rb:228:in `call'
+puma (4.3.6) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.6) lib/puma/server.rb:472:in `process_client'
+puma (4.3.6) lib/puma/server.rb:328:in `block in run'
+puma (4.3.6) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started GET "/favicon.ico" for ::1 at 2020-10-22 11:27:53 +0300
+  
+ActionController::RoutingError (No route matches [GET] "/favicon.ico"):
+  
+actionpack (6.0.3.4) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.4) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.4) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.4) lib/rails/engine.rb:527:in `call'
+puma (4.3.6) lib/puma/configuration.rb:228:in `call'
+puma (4.3.6) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.6) lib/puma/server.rb:472:in `process_client'
+puma (4.3.6) lib/puma/server.rb:328:in `block in run'
+puma (4.3.6) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started GET "/tasks/1" for ::1 at 2020-10-22 11:28:02 +0300
+Processing by TasksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mTask Load (0.4ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/tasks_controller.rb:24:in `find_task'
+Completed 204 No Content in 5ms (ActiveRecord: 0.4ms | Allocations: 565)
+
+
+Started GET "/tasks/1" for ::1 at 2020-10-22 11:28:17 +0300
+Processing by TasksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mTask Load (0.4ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/tasks_controller.rb:24:in `find_task'
+Completed 204 No Content in 5ms (ActiveRecord: 0.4ms | Allocations: 566)
+
+
+Started GET "/" for ::1 at 2020-10-22 11:28:22 +0300
+Processing by Rails::WelcomeController#index as HTML
+  Rendering /home/falren/.rbenv/versions/2.7.1/lib/ruby/gems/2.7.0/gems/railties-6.0.3.4/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered /home/falren/.rbenv/versions/2.7.1/lib/ruby/gems/2.7.0/gems/railties-6.0.3.4/lib/rails/templates/rails/welcome/index.html.erb (Duration: 30.1ms | Allocations: 178)
+Completed 200 OK in 37ms (Views: 33.7ms | ActiveRecord: 0.0ms | Allocations: 718)
+
+
+Started GET "/" for ::1 at 2020-10-22 11:28:22 +0300
+Processing by Rails::WelcomeController#index as HTML
+  Rendering /home/falren/.rbenv/versions/2.7.1/lib/ruby/gems/2.7.0/gems/railties-6.0.3.4/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered /home/falren/.rbenv/versions/2.7.1/lib/ruby/gems/2.7.0/gems/railties-6.0.3.4/lib/rails/templates/rails/welcome/index.html.erb (Duration: 1.2ms | Allocations: 7)
+Completed 200 OK in 5ms (Views: 3.4ms | ActiveRecord: 0.0ms | Allocations: 238)
+
+
+Started GET "/favicon.ico" for ::1 at 2020-10-22 11:28:23 +0300
+  
+ActionController::RoutingError (No route matches [GET] "/favicon.ico"):
+  
+actionpack (6.0.3.4) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.4) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.4) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.4) lib/rails/engine.rb:527:in `call'
+puma (4.3.6) lib/puma/configuration.rb:228:in `call'
+puma (4.3.6) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.6) lib/puma/server.rb:472:in `process_client'
+puma (4.3.6) lib/puma/server.rb:328:in `block in run'
+puma (4.3.6) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started GET "/tasks/1" for ::1 at 2020-10-22 11:28:28 +0300
+Processing by TasksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mTask Load (0.4ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/tasks_controller.rb:24:in `find_task'
+Completed 204 No Content in 4ms (ActiveRecord: 0.4ms | Allocations: 565)
+
+
+Started GET "/tasks/1.json" for ::1 at 2020-10-22 11:29:44 +0300
+Processing by TasksController#show as JSON
+  Parameters: {"id"=>"1"}
+  [1m[36mTask Load (0.6ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/tasks_controller.rb:24:in `find_task'
+Completed 204 No Content in 6ms (ActiveRecord: 0.6ms | Allocations: 566)
+
+
+Started GET "/" for ::1 at 2020-10-22 11:32:34 +0300
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+Processing by Rails::WelcomeController#index as HTML
+  Rendering /home/falren/.rbenv/versions/2.7.1/lib/ruby/gems/2.7.0/gems/railties-6.0.3.4/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered /home/falren/.rbenv/versions/2.7.1/lib/ruby/gems/2.7.0/gems/railties-6.0.3.4/lib/rails/templates/rails/welcome/index.html.erb (Duration: 0.2ms | Allocations: 7)
+Completed 200 OK in 2ms (Views: 0.9ms | ActiveRecord: 0.0ms | Allocations: 394)
+
+
+Started GET "/" for ::1 at 2020-10-22 11:32:34 +0300
+Processing by Rails::WelcomeController#index as HTML
+  Rendering /home/falren/.rbenv/versions/2.7.1/lib/ruby/gems/2.7.0/gems/railties-6.0.3.4/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered /home/falren/.rbenv/versions/2.7.1/lib/ruby/gems/2.7.0/gems/railties-6.0.3.4/lib/rails/templates/rails/welcome/index.html.erb (Duration: 0.6ms | Allocations: 7)
+Completed 200 OK in 2ms (Views: 1.3ms | ActiveRecord: 0.0ms | Allocations: 237)
+
+
+Started GET "/favicon.ico" for ::1 at 2020-10-22 11:32:34 +0300
+  
+ActionController::RoutingError (No route matches [GET] "/favicon.ico"):
+  
+actionpack (6.0.3.4) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.4) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.4) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.4) lib/rails/engine.rb:527:in `call'
+puma (4.3.6) lib/puma/configuration.rb:228:in `call'
+puma (4.3.6) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.6) lib/puma/server.rb:472:in `process_client'
+puma (4.3.6) lib/puma/server.rb:328:in `block in run'
+puma (4.3.6) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started GET "/tasks/1" for ::1 at 2020-10-22 11:32:38 +0300
+Processing by TasksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mTask Load (0.5ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/tasks_controller.rb:30:in `find_task'
+Completed 200 OK in 49ms (Views: 0.6ms | ActiveRecord: 2.9ms | Allocations: 4665)
+
+
+Started GET "/tasks/1" for ::1 at 2020-10-22 11:32:39 +0300
+Processing by TasksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mTask Load (0.7ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/tasks_controller.rb:30:in `find_task'
+Completed 200 OK in 8ms (Views: 0.6ms | ActiveRecord: 0.7ms | Allocations: 663)
+
+
+Started GET "/favicon.ico" for ::1 at 2020-10-22 11:32:39 +0300
+  
+ActionController::RoutingError (No route matches [GET] "/favicon.ico"):
+  
+actionpack (6.0.3.4) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.4) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.4) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.4) lib/rails/engine.rb:527:in `call'
+puma (4.3.6) lib/puma/configuration.rb:228:in `call'
+puma (4.3.6) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.6) lib/puma/server.rb:472:in `process_client'
+puma (4.3.6) lib/puma/server.rb:328:in `block in run'
+puma (4.3.6) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started GET "/tasks/1" for ::1 at 2020-10-22 11:35:50 +0300
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  
+SyntaxError (/home/falren/ToDoList/app/controllers/tasks_controller.rb:24: syntax error, unexpected ':', expecting '}'
+        id: task.id,
+          ^
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:25: syntax error, unexpected tLABEL, expecting '='
+        title: task.title,
+        ^~~~~~
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:26: syntax error, unexpected tLABEL, expecting '='
+        description: task.description
+        ^~~~~~~~~~~~
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:27: syntax error, unexpected ':', expecting `end'
+        active: task.active
+              ^
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:28: syntax error, unexpected '}', expecting `end'
+      }
+      ^
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:48: syntax error, unexpected end-of-input, expecting `end'):
+  
+app/controllers/tasks_controller.rb:24: syntax error, unexpected ':', expecting '}'
+app/controllers/tasks_controller.rb:25: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:26: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:27: syntax error, unexpected ':', expecting `end'
+app/controllers/tasks_controller.rb:28: syntax error, unexpected '}', expecting `end'
+app/controllers/tasks_controller.rb:48: syntax error, unexpected end-of-input, expecting `end'
+app/controllers/tasks_controller.rb:24: syntax error, unexpected ':', expecting '}'
+app/controllers/tasks_controller.rb:25: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:26: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:27: syntax error, unexpected ':', expecting `end'
+app/controllers/tasks_controller.rb:28: syntax error, unexpected '}', expecting `end'
+app/controllers/tasks_controller.rb:48: syntax error, unexpected end-of-input, expecting `end'
+Started GET "/tasks/1" for ::1 at 2020-10-22 11:35:51 +0300
+  
+SyntaxError (/home/falren/ToDoList/app/controllers/tasks_controller.rb:24: syntax error, unexpected ':', expecting '}'
+        id: task.id,
+          ^
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:25: syntax error, unexpected tLABEL, expecting '='
+        title: task.title,
+        ^~~~~~
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:26: syntax error, unexpected tLABEL, expecting '='
+        description: task.description
+        ^~~~~~~~~~~~
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:27: syntax error, unexpected ':', expecting `end'
+        active: task.active
+              ^
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:28: syntax error, unexpected '}', expecting `end'
+      }
+      ^
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:48: syntax error, unexpected end-of-input, expecting `end'):
+  
+app/controllers/tasks_controller.rb:24: syntax error, unexpected ':', expecting '}'
+app/controllers/tasks_controller.rb:25: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:26: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:27: syntax error, unexpected ':', expecting `end'
+app/controllers/tasks_controller.rb:28: syntax error, unexpected '}', expecting `end'
+app/controllers/tasks_controller.rb:48: syntax error, unexpected end-of-input, expecting `end'
+app/controllers/tasks_controller.rb:24: syntax error, unexpected ':', expecting '}'
+app/controllers/tasks_controller.rb:25: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:26: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:27: syntax error, unexpected ':', expecting `end'
+app/controllers/tasks_controller.rb:28: syntax error, unexpected '}', expecting `end'
+app/controllers/tasks_controller.rb:48: syntax error, unexpected end-of-input, expecting `end'
+Started GET "/favicon.ico" for ::1 at 2020-10-22 11:35:52 +0300
+  
+ActionController::RoutingError (No route matches [GET] "/favicon.ico"):
+  
+actionpack (6.0.3.4) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.4) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.4) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.4) lib/rails/engine.rb:527:in `call'
+puma (4.3.6) lib/puma/configuration.rb:228:in `call'
+puma (4.3.6) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.6) lib/puma/server.rb:472:in `process_client'
+puma (4.3.6) lib/puma/server.rb:328:in `block in run'
+puma (4.3.6) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started GET "/tasks/1" for ::1 at 2020-10-22 11:36:05 +0300
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  
+SyntaxError (/home/falren/ToDoList/app/controllers/tasks_controller.rb:24: syntax error, unexpected ':', expecting '}'
+        id: task.id,
+          ^
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:25: syntax error, unexpected tLABEL, expecting '='
+        title: task.title,
+        ^~~~~~
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:26: syntax error, unexpected tLABEL, expecting '='
+        description: task.description,
+        ^~~~~~~~~~~~
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:27: syntax error, unexpected tLABEL, expecting '='
+        active: task.active
+        ^~~~~~~
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:28: syntax error, unexpected '}', expecting `end'
+      }
+      ^
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:48: syntax error, unexpected end-of-input, expecting `end'):
+  
+app/controllers/tasks_controller.rb:24: syntax error, unexpected ':', expecting '}'
+app/controllers/tasks_controller.rb:25: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:26: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:27: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:28: syntax error, unexpected '}', expecting `end'
+app/controllers/tasks_controller.rb:48: syntax error, unexpected end-of-input, expecting `end'
+app/controllers/tasks_controller.rb:24: syntax error, unexpected ':', expecting '}'
+app/controllers/tasks_controller.rb:25: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:26: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:27: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:28: syntax error, unexpected '}', expecting `end'
+app/controllers/tasks_controller.rb:48: syntax error, unexpected end-of-input, expecting `end'
+Started GET "/tasks/1" for ::1 at 2020-10-22 11:36:05 +0300
+  
+SyntaxError (/home/falren/ToDoList/app/controllers/tasks_controller.rb:24: syntax error, unexpected ':', expecting '}'
+        id: task.id,
+          ^
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:25: syntax error, unexpected tLABEL, expecting '='
+        title: task.title,
+        ^~~~~~
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:26: syntax error, unexpected tLABEL, expecting '='
+        description: task.description,
+        ^~~~~~~~~~~~
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:27: syntax error, unexpected tLABEL, expecting '='
+        active: task.active
+        ^~~~~~~
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:28: syntax error, unexpected '}', expecting `end'
+      }
+      ^
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:48: syntax error, unexpected end-of-input, expecting `end'):
+  
+app/controllers/tasks_controller.rb:24: syntax error, unexpected ':', expecting '}'
+app/controllers/tasks_controller.rb:25: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:26: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:27: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:28: syntax error, unexpected '}', expecting `end'
+app/controllers/tasks_controller.rb:48: syntax error, unexpected end-of-input, expecting `end'
+app/controllers/tasks_controller.rb:24: syntax error, unexpected ':', expecting '}'
+app/controllers/tasks_controller.rb:25: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:26: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:27: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:28: syntax error, unexpected '}', expecting `end'
+app/controllers/tasks_controller.rb:48: syntax error, unexpected end-of-input, expecting `end'
+Started GET "/tasks/1" for ::1 at 2020-10-22 11:36:06 +0300
+  
+SyntaxError (/home/falren/ToDoList/app/controllers/tasks_controller.rb:24: syntax error, unexpected ':', expecting '}'
+        id: task.id,
+          ^
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:25: syntax error, unexpected tLABEL, expecting '='
+        title: task.title,
+        ^~~~~~
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:26: syntax error, unexpected tLABEL, expecting '='
+        description: task.description,
+        ^~~~~~~~~~~~
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:27: syntax error, unexpected tLABEL, expecting '='
+        active: task.active
+        ^~~~~~~
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:28: syntax error, unexpected '}', expecting `end'
+      }
+      ^
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:48: syntax error, unexpected end-of-input, expecting `end'):
+  
+app/controllers/tasks_controller.rb:24: syntax error, unexpected ':', expecting '}'
+app/controllers/tasks_controller.rb:25: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:26: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:27: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:28: syntax error, unexpected '}', expecting `end'
+app/controllers/tasks_controller.rb:48: syntax error, unexpected end-of-input, expecting `end'
+app/controllers/tasks_controller.rb:24: syntax error, unexpected ':', expecting '}'
+app/controllers/tasks_controller.rb:25: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:26: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:27: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:28: syntax error, unexpected '}', expecting `end'
+app/controllers/tasks_controller.rb:48: syntax error, unexpected end-of-input, expecting `end'
+Started GET "/tasks/1" for ::1 at 2020-10-22 11:36:07 +0300
+  
+SyntaxError (/home/falren/ToDoList/app/controllers/tasks_controller.rb:24: syntax error, unexpected ':', expecting '}'
+        id: task.id,
+          ^
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:25: syntax error, unexpected tLABEL, expecting '='
+        title: task.title,
+        ^~~~~~
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:26: syntax error, unexpected tLABEL, expecting '='
+        description: task.description,
+        ^~~~~~~~~~~~
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:27: syntax error, unexpected tLABEL, expecting '='
+        active: task.active
+        ^~~~~~~
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:28: syntax error, unexpected '}', expecting `end'
+      }
+      ^
+/home/falren/ToDoList/app/controllers/tasks_controller.rb:48: syntax error, unexpected end-of-input, expecting `end'):
+  
+app/controllers/tasks_controller.rb:24: syntax error, unexpected ':', expecting '}'
+app/controllers/tasks_controller.rb:25: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:26: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:27: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:28: syntax error, unexpected '}', expecting `end'
+app/controllers/tasks_controller.rb:48: syntax error, unexpected end-of-input, expecting `end'
+app/controllers/tasks_controller.rb:24: syntax error, unexpected ':', expecting '}'
+app/controllers/tasks_controller.rb:25: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:26: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:27: syntax error, unexpected tLABEL, expecting '='
+app/controllers/tasks_controller.rb:28: syntax error, unexpected '}', expecting `end'
+app/controllers/tasks_controller.rb:48: syntax error, unexpected end-of-input, expecting `end'
+Started GET "/favicon.ico" for ::1 at 2020-10-22 11:36:08 +0300
+  
+ActionController::RoutingError (No route matches [GET] "/favicon.ico"):
+  
+actionpack (6.0.3.4) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.4) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.4) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.4) lib/rails/engine.rb:527:in `call'
+puma (4.3.6) lib/puma/configuration.rb:228:in `call'
+puma (4.3.6) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.6) lib/puma/server.rb:472:in `process_client'
+puma (4.3.6) lib/puma/server.rb:328:in `block in run'
+puma (4.3.6) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started GET "/tasks/1" for ::1 at 2020-10-22 11:38:07 +0300
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+Processing by TasksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mTask Load (0.3ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/tasks_controller.rb:30:in `find_task'
+Completed 200 OK in 20ms (Views: 0.3ms | ActiveRecord: 1.5ms | Allocations: 4640)
+
+
+Started GET "/tasks/1" for ::1 at 2020-10-22 11:38:08 +0300
+Processing by TasksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mTask Load (0.2ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/tasks_controller.rb:30:in `find_task'
+Completed 200 OK in 3ms (Views: 0.7ms | ActiveRecord: 0.2ms | Allocations: 663)
+
+
+Started GET "/favicon.ico" for ::1 at 2020-10-22 11:38:08 +0300
+  
+ActionController::RoutingError (No route matches [GET] "/favicon.ico"):
+  
+actionpack (6.0.3.4) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.4) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.4) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.4) lib/rails/engine.rb:527:in `call'
+puma (4.3.6) lib/puma/configuration.rb:228:in `call'
+puma (4.3.6) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.6) lib/puma/server.rb:472:in `process_client'
+puma (4.3.6) lib/puma/server.rb:328:in `block in run'
+puma (4.3.6) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
