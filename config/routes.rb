@@ -1,3 +1,7 @@
 Rails.application.routes.draw do
-  resources :tasks, except: :new
+  namespace :api do
+    namespace :v1 do
+      resources :tasks, except: :new
+    end
+  end
 end
