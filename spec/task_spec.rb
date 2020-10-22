@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Tasks API', type: :request do
+describe 'Task API', type: :request do
   it 'returns all tasks' do
     get '/tasks'
 
