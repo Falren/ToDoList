@@ -6,26 +6,34 @@ class TasksController < ApiController
   def create
     @task = Task.new(task_params)
     if @task.save
-      render json: {status: 'success', message: 'Task has been created', data: @task }, status: :created
+      render json: @task, status: :created
     else
-      render json: {status: 'error', message: 'Task is not created', data: @task.errors }, status: :unprocessable_entity
+      render json: @task.errors.full_messages, status: :unprocessable_entity
     end
   end
 
   def update
-    @task.save(task_params)
+    if @task.update(task_params)
+      render json: @task, status: :accepted
+    else
+      render json: @task.errors.full_messages, status: :unprocessable_entity
+    end
   end
 
   def show
-    render json: { data: @task }
+    render json: @task
   end
 
   def index
-    render json: { data: @tasks }
+    render json: @tasks
   end
 
-  def delete
-
+  def destroy
+    if @task.delete
+      render json: @task, status: :accepted
+    else
+      render json: @task.errors.full_messages, status: :unprocessable_entity
+    end
   end
 
   private
