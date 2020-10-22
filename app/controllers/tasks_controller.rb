@@ -1,6 +1,7 @@
 class TasksController < ApiController
 
-  before_action :find_task
+  before_action :find_task, except: :index
+  before_action :find_tasks, only: :index
 
   def create
 
@@ -10,15 +11,11 @@ class TasksController < ApiController
   end
 
   def show
-    render json: {
-      id: @task.id,
-      title: @task.title,
-      description: @task.description,
-      active: @task.active
-    }
+    render json: { task: @task }
   end
 
   def index
+    render json: { tasks: @tasks }
   end
 
   def delete
