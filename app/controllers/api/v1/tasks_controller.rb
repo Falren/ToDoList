@@ -1,6 +1,7 @@
 class Api::V1::TasksController < ApplicationController
   expose :task
   expose :tasks, ->{ Task.all}
+  expose :active_tasks, ->{ Task.where(active: true)}
 
   def index
     render json: tasks, status: :ok, each_serializer: TasksSerializer
