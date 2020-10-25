@@ -1,40 +1,41 @@
+version: 2.1
+jobs:
+  build:
+    working_directory: ~/ToDoList
+    docker:
+      - image: circleci/ruby:2.7.1
+        environment:
+          PGHOST: localhost
+          PGUSER: ToDoList
+          RAILS_ENV: test
+      - image: postgres:9.5
+        environment:
+          POSTGRES_USER: ToDoList
+          POSTGRES_DB: ToDoList_test
+          POSTGRES_PASSWORD: ""
+    steps:
+      - run:
+          name: Configure bundler
+          command: |
+            echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
+            source $BASH_ENV
+            gem install bundler
+
 jobs:
   build:
     executor: default
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - hix-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
-            - hix-
-      - configure_bundler
-      - run:
-          name: Install bundle
-          command: bundle install
-      - run:
-          name: Wait for DB
-          command: dockerize -wait tcp://127.0.0.1:3306 -timeout 1m
-      - run:
-          name: Setup DB
-          command: bundle exec rails db:create db:schema:load --trace
-      - run:
-          name: RSpec
-          command: |
-            bundle exec rspec --profile 10 \
-                              --format progress
-      - store_artifacts:
-          path: coverage
-      - save_cache:
-          key: hix-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
-          paths:
-            - vendor/bundle
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - ./hix
-
-workflows:
-  version: 2
-  integration:
-    jobs:
-      - build
+      - type: cache-restore
+        name: Restore bundle cache
+        key: ToDoList-{{ checksum "Gemfile.lock" }}
+      - run: bundle install --path vendor/bundle
+      - type: cache-save
+        name: Store bundle cache
+        key: your-app-name-{{ checksum "Gemfile.lock" }}
+        paths:
+          - vendor/bundle
+      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run: cp .sample.env .env
+      - run: bundle exec rake db:setup
+      - run: bundle exec rake
