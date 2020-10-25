@@ -2,21 +2,21 @@ version: 2.1
 
 executors:
   default:
-    working_directory: ~/hix_postgresql
+    working_directory: ~/ToDoList
     docker:
-      - image: circleci/ruby:2.6.5
+      - image: circleci/ruby:2.7.1
         environment:
           BUNDLE_JOBS: 3
           BUNDLE_PATH: vendor/bundle
           BUNDLE_RETRY: 3
-          BUNDLER_VERSION: 2.0.1
+          BUNDLER_VERSION: 2.1.4
           RAILS_ENV: test
           DB_HOST: 127.0.0.1
           PG_HOST: 127.0.0.1
           PGUSER: hixonrails
-      - image: circleci/postgres:12.0
+      - image: circleci/postgres:12.4
         environment:
-          POSTGRES_DB: hix_postgresql_test
+          POSTGRES_DB: ToDoList_test
           POSTGRES_USER: hixonrails
 
 commands:
@@ -37,8 +37,8 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - hix_postgresql-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
-            - hix_postgresql-
+            - ToDoList-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+            - ToDoList-
       - configure_bundler
       - run:
           name: Install bundle
@@ -50,16 +50,10 @@ jobs:
           name: Setup DB
           command: bundle exec rails db:create db:schema:load --trace
       - save_cache:
-          key: hix_postgresql-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+          key: ToDoList-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
       - persist_to_workspace:
           root: ~/
           paths:
-            - ./hix_postgresql
-
-workflows:
-  version: 2
-  integration:
-    jobs:
-      - build
+            - ./ToDoList
