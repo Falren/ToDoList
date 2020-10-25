@@ -1,18 +1,27 @@
 version: 2.1
-jobs:
-  build:
-    working_directory: ~/ToDoList
+
+executors:
+  default:
+    working_directory: ~/hix_postgresql
     docker:
-      - image: circleci/ruby:2.7.1
+      - image: circleci/ruby:2.6.5
         environment:
-          PGHOST: localhost
-          PGUSER: ToDoList
+          BUNDLE_JOBS: 3
+          BUNDLE_PATH: vendor/bundle
+          BUNDLE_RETRY: 3
+          BUNDLER_VERSION: 2.0.1
           RAILS_ENV: test
-      - image: postgres:9.5
+          DB_HOST: 127.0.0.1
+          PG_HOST: 127.0.0.1
+          PGUSER: hixonrails
+      - image: circleci/postgres:12.0
         environment:
-          POSTGRES_USER: ToDoList
-          POSTGRES_DB: ToDoList_test
-          POSTGRES_PASSWORD: ""
+          POSTGRES_DB: hix_postgresql_test
+          POSTGRES_USER: hixonrails
+
+commands:
+  configure_bundler:
+    description: Configure bundler
     steps:
       - run:
           name: Configure bundler
@@ -26,16 +35,31 @@ jobs:
     executor: default
     steps:
       - checkout
-      - type: cache-restore
-        name: Restore bundle cache
-        key: ToDoList-{{ checksum "Gemfile.lock" }}
-      - run: bundle install --path vendor/bundle
-      - type: cache-save
-        name: Store bundle cache
-        key: your-app-name-{{ checksum "Gemfile.lock" }}
-        paths:
-          - vendor/bundle
-      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
-      - run: cp .sample.env .env
-      - run: bundle exec rake db:setup
-      - run: bundle exec rake
+      - restore_cache:
+          keys:
+            - hix_postgresql-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+            - hix_postgresql-
+      - configure_bundler
+      - run:
+          name: Install bundle
+          command: bundle install
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://127.0.0.1:5432 -timeout 1m
+      - run:
+          name: Setup DB
+          command: bundle exec rails db:create db:schema:load --trace
+      - save_cache:
+          key: hix_postgresql-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - ./hix_postgresql
+
+workflows:
+  version: 2
+  integration:
+    jobs:
+      - build
