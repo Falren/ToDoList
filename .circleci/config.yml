@@ -17,7 +17,7 @@ executors:
       - image: circleci/postgres:12.4
         environment:
           POSTGRES_DB: ToDoList_test
-          POSTGRES_USER: hixonrails
+          POSTGRES_USER: falren
 
 commands:
   configure_bundler:
