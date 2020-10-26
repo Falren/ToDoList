@@ -1,116 +1,56 @@
-defaults: &defaults
-  working_directory: ~/ToDoList
-  parallelism: 2
-
-  docker:
-    - image: circleci/ruby:2.7.1-node-browsers
-      environment:
-        PGHOST: localhost
-        PGUSER: falren
-        RAILS_ENV: test
-
-    - image: circleci/postgres:12.4
-      environment:
-        POSTGRES_USER: falren
-        POSTGRES_DB: ToDoList_test
-        POSTGRES_PASSWORD: trust
-
-version: 2
-jobs:
-  test:
-    <<: *defaults
-    steps:
-      - checkout
-
-      - save_cache:
-          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
-          paths:
-            - ~/ToDoList
-
+version: 2.1 # use CircleCI 2.0
+jobs: # a collection of steps
+  build: # runs not using Workflows must have a `build` job as entry point
+    parallelism: 1 # run three instances of this job in parallel
+    docker: # run the steps with Docker
+      - image: circleci/ruby:2.7.1 # ...with this image as the primary container; this is where all `steps` will run
+        environment: # environment variables for primary container
+          BUNDLE_JOBS: 3
+          BUNDLE_RETRY: 3
+          BUNDLE_PATH: vendor/bundle
+          PGHOST: 127.0.0.1
+          PGUSER: postgres
+          RAILS_ENV: test
+      - image: circleci/postgres:11 # database image
+        environment: # environment variables for database, it is kind of obvious but it is important that they match with your test config in database.yml
+          POSTGRES_USER: falren
+          POSTGRES_DB: ToDoList_test
+          POSTGRES_PASSWORD: trust
+    steps: # a collection of executable commands
+      - checkout # special step to check out source code to working directory
+      # Which version of bundler?
+      - run:
+          name: Which bundler?
+          command: bundle -v
+      # Restore bundle cache
+      # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
       - restore_cache:
           keys:
-            - gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
-            - gem-cache-{{ arch }}-{{ .Branch }}
-            - gem-cache
-      - run: bundle install --path vendor/bundle
+            - ToDoList-bundle-v2-{{ checksum "Gemfile.lock" }}
+            - ToDoList-bundle-v2-
+      - run: # Install Ruby dependencies
+          name: Bundle Install
+          command: bundle check --path vendor/bundle || bundle install --deployment
+      # Store bundle cache for Ruby dependencies
       - save_cache:
-          key: gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+          key: ToDoList-bundle-v2-{{ checksum "Gemfile.lock" }}
           paths:
-            - ~/ToDoList/vendor/bundle
-
-      - restore_cache:
-          keys:
-            - yarn-cache-{{ arch }}-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            - yarn-cache-{{ arch }}-{{ .Branch }}
-            - yarn-cache
+            - vendor/bundle
       - run:
-          name: Yarn Install
-          command: yarn install --cache-folder ~/.cache/yarn
-      - save_cache:
-          key: yarn-cache-{{ arch }}-{{ .Branch }}-{{ checksum "yarn.lock" }}
-          paths:
-            - ~/ToDoList/.cache/yarn
-      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
-      - run: bundle exec rails db:create
-      - run: bundle exec rails db:migrate
-
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
       - run:
-          name: Parallel Rspec
-          environment:
-            - RAILS_ENV: test
-            - RACK_ENV: test
+          name: Database setup
+          command: bin/rails db:schema:load --trace
+      - run:
+          name: Run rspec in parallel
           command: |
-            mkdir -p /tmp/rspec
-            TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
             bundle exec rspec --profile 10 \
                               --format RspecJunitFormatter \
-                              --out /tmp/rspec/rspec.xml \
+                              --out test_results/rspec.xml \
                               --format progress \
-                              -- \
-                              $TEST_FILES
-      - store_test_results:
-          path: /tmp/rspec
-
-      - run:
-          name: Stash Coverage Results
-          command: |
-            mkdir coverage_results
-            cp -R coverage/.resultset.json coverage_results/.resultset-${CIRCLE_NODE_INDEX}.json
-      - persist_to_workspace:
-          root: .
-          paths:
-            - coverage_results
-
-  coverage:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: .
-
-      - restore_cache:
-          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
-
-      - restore_cache:
-          keys:
-            - gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
-            - gem-cache-{{ arch }}-{{ .Branch }}
-            - gem-cache
-
-      - run: bundle install --path vendor/bundle
-
-      - run:
-          name: Merge and check coverage
-          command: |
-            RUN_COVERAGE=true bundle exec rake simplecov:report_coverage
-      - store_artifacts:
-          path: ~/ToDoList/coverage
-          destination: coverage
-
-workflows:
-  version: 2
-  build_and_test:
-    jobs:
-        - test
-        - coverage:
-            requires:
-              - test
+                              $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+      # Save test results for timing analysis
+      - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+          path: test_results
+      # See https://circleci.com/docs/2.0/deployment-integrations/ for example deploy configs
