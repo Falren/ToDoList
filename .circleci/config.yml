@@ -50,10 +50,6 @@ jobs:
           key: yarn-cache-{{ arch }}-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
             - ~/ToDoList/.cache/yarn
-
-      - run: cp .env.test .env
-      - run: bundle exec rubocop
-      - run: bundle exec brakeman -z
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
       - run: bundle exec rake db:schema:load
 
