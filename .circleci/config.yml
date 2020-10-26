@@ -1,56 +1,119 @@
-version: 2.1
+defaults: &defaults
+  working_directory: ~/split_app
+  parallelism: 2
 
-executors:
-  default:
-    working_directory: ~/ToDoList
-    docker:
-      - image: circleci/ruby:2.7.1
-        environment:
-          BUNDLE_JOBS: 3
-          BUNDLE_PATH: vendor/bundle
-          BUNDLE_RETRY: 3
-          BUNDLER_VERSION: 2.1.4
-          RAILS_ENV: test
-          DB_HOST: 127.0.0.1
-          PG_HOST: 127.0.0.1
-          PGUSER: falren
-      - image: circleci/postgres:12.4
-        environment:
-          POSTGRES_DB: ToDoList_test
-          POSTGRES_USER: falren
+  docker:
+    - image: circleci/ruby:2.5.0-node-browsers
+      environment:
+        PGHOST: localhost
+        PGUSER: split
+        RAILS_ENV: test
 
-commands:
-  configure_bundler:
-    description: Configure bundler
-    steps:
-      - run:
-          name: Configure bundler
-          command: |
-            echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
-            source $BASH_ENV
-            gem install bundler
+    - image: circleci/postgres:9.6
+      environment:
+        POSTGRES_USER: split
+        POSTGRES_DB: split_test
+        POSTGRES_PASSWORD: ""
 
+version: 2
 jobs:
-  build:
-    executor: default
+  test:
+    <<: *defaults
     steps:
       - checkout
+
+      - save_cache:
+          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/split_app
+
       - restore_cache:
           keys:
-            - ToDoList-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
-            - ToDoList-
-      - configure_bundler
-      - run:
-          name: Install bundle
-          command: bundle install
-      - run:
-          name: Setup DB
-          command: bundle exec rails db:create db:schema:load --trace
+            - gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+            - gem-cache-{{ arch }}-{{ .Branch }}
+            - gem-cache
+      - run: bundle install --path vendor/bundle
       - save_cache:
-          key: ToDoList-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+          key: gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
           paths:
-            - vendor/bundle
+            - ~/split_app/vendor/bundle
+
+      - restore_cache:
+          keys:
+            - yarn-cache-{{ arch }}-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - yarn-cache-{{ arch }}-{{ .Branch }}
+            - yarn-cache
+      - run:
+          name: Yarn Install
+          command: yarn install --cache-folder ~/.cache/yarn
+      - save_cache:
+          key: yarn-cache-{{ arch }}-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/split_app/.cache/yarn
+
+      - run: cp .env.test .env
+      - run: bundle exec rubocop
+      - run: bundle exec brakeman -z
+      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run: bundle exec rake db:schema:load
+
+      - run: 
+          name: Parallel Rspec
+          environment:
+            - RAILS_ENV: test
+            - RACK_ENV: test
+          command: |
+            mkdir -p /tmp/rspec
+            TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
+            bundle exec rspec --profile 10 \
+                              --format RspecJunitFormatter \
+                              --out /tmp/rspec/rspec.xml \
+                              --format progress \
+                              -- \
+                              $TEST_FILES
+      - store_test_results:
+          path: /tmp/rspec
+
+      - run:
+          name: Stash Coverage Results
+          command: |
+            mkdir coverage_results
+            cp -R coverage/.resultset.json coverage_results/.resultset-${CIRCLE_NODE_INDEX}.json
       - persist_to_workspace:
-          root: ~/
+          root: .
           paths:
-            - ./ToDoList
+            - coverage_results
+
+  coverage:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+
+      - restore_cache:
+          key: v2-repo-{{ .Environment.CIRCLE_SHA1 }}
+
+      - restore_cache:
+          keys:
+            - gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+            - gem-cache-{{ arch }}-{{ .Branch }}
+            - gem-cache
+
+      - run: bundle install --path vendor/bundle
+
+      - run:
+          name: Merge and check coverage
+          command: |
+            RUN_COVERAGE=true bundle exec rake simplecov:report_coverage
+      - store_artifacts:
+          path: ~/split_app/coverage
+          destination: coverage
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+        - test
+        - coverage:
+            requires: 
+              - test
