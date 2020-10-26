@@ -11,8 +11,8 @@ defaults: &defaults
 
     - image: circleci/postgres:12.4
       environment:
-        POSTGRES_USER: split
-        POSTGRES_DB: split_test
+        POSTGRES_USER: falren
+        POSTGRES_DB: ToDoList_test
         POSTGRES_PASSWORD: trust
 
 version: 2
@@ -51,7 +51,8 @@ jobs:
           paths:
             - ~/ToDoList/.cache/yarn
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
-      - run: bundle exec rake db:schema:load
+      - run: bundle exec rails db:create
+      - run: bundle exec rails db:migrate
 
       - run:
           name: Parallel Rspec
