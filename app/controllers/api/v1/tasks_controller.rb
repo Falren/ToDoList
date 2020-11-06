@@ -1,6 +1,6 @@
 class Api::V1::TasksController < ApplicationController
   expose :task
-  expose :tasks, -> { params[:active].present? ? Task.by_active(params[:active]) : Task.search(params[:param]) }
+  expose :tasks, -> { Task.by_active(params[:active]).search(params[:query]) }
   def index
     render json: tasks, status: :ok, each_serializer: TasksSerializer
   end
