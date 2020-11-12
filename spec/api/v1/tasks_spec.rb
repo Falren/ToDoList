@@ -17,7 +17,7 @@ RSpec.describe Api::V1::TasksController, type: :controller do
   end
 
   describe '#create' do
-    subject { post :create, params: { task: task_attributes }}
+    subject { post :create, params: { task: task_attributes } }
 
     it { is_expected.to have_http_status(:created) }
   end
@@ -29,11 +29,8 @@ RSpec.describe Api::V1::TasksController, type: :controller do
   end
 
   describe '#destroy' do
-    subject { delete :destroy, params: { id: task.id  } }
+    subject { delete :destroy, params: { id: task.id } }
 
     it { is_expected.to have_http_status(:accepted) }
   end
 end
-
-
-
