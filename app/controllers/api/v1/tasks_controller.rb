@@ -1,7 +1,7 @@
 class Api::V1::TasksController < ApplicationController
   expose :task
   expose :tasks, -> { Task.by_active(params[:active]).search(params[:query]) }
-  
+
   def index
     render json: tasks, status: :ok, each_serializer: TasksSerializer
   end
@@ -36,7 +36,7 @@ class Api::V1::TasksController < ApplicationController
   end
 
   private
-  
+
   def task_params
     params.require(:task).permit(:title, :description, :active)
   end
