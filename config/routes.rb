@@ -4,5 +4,5 @@ Rails.application.routes.draw do
       resources :tasks, except: :new
     end
   end
-  root 'api/v1/tasks#index'
+  root 'home#index'
 end
