@@ -4,24 +4,38 @@ import Task from './Task'
 
 
 function Tasks() {
-  const [tasks, setTasks] = useState([])
+  const [activeTasks, setActiveTasks] = useState([])
+  const [completedTasks, setCompletedTasks] = useState([])
+  const completedTask = completedTasks.map( task => { return <Task key={ task.id } task={ task }/> })
+  const activeTask = activeTasks.map( task => { return <Task key={ task.id } task={ task }/> })
   
-  useEffect(() => {
-    axios.get('/api/v1/tasks.json')
-    .then(resp => { setTasks(resp.data) })
-    .catch( err => (err) )
-    }, [tasks.length])
 
-    const task = tasks.map( task => {
-      return(
-        <Task key={ task.id } task={ task }/>
-      )
-    })
+  function getCompletedTasks(tasks) {
+    const active = tasks.filter( task => task = task.active)
+    setActiveTasks(active);
+  }
+
+  function getActiveTasks(tasks) {
+    const completed = tasks.filter( task => task = !task.active)
+    setCompletedTasks(completed);
+  }
+
+  useEffect( async () => {
+    const response = await axios.get('/api/v1/tasks');
+    const tasks = await response.data; 
+    getActiveTasks(tasks);
+    getCompletedTasks(tasks);
+   }, [activeTasks.length || completedTasks.length ])
 
   return(
-      <div>
-        { task }
+    <div className='content-container'>
+      <div className='card-container'>
+        { completedTask }
       </div>
+      <div className='card-container'>
+        { activeTask }
+      </div>
+    </div>
   ) 
 }
 

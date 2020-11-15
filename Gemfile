@@ -22,6 +22,7 @@ gem 'slim'
 gem 'webpacker'
 gem 'react-rails'
 gem 'decent_exposure'
+gem 'dotenv-rails'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'active_model_serializers'
