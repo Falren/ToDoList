@@ -1,7 +1,7 @@
 class Api::V1::TasksController < ApplicationController
   expose :task
   expose :tasks, -> { Task.by_active(params[:active]).search(params[:query]) }
-
+  skip_before_action :verify_authenticity_token
   def index
     render json: tasks, status: :ok, each_serializer: TasksSerializer
   end
@@ -17,7 +17,7 @@ class Api::V1::TasksController < ApplicationController
   def update
     task = Task.find(params[:id])
     if task.update(task_params)
-      render json: task, status: :ok
+      render json: task, status: :ok, serializer: TasksSerializer
     else
       render json: task.errors.full_messages, status: :unprocessable_entity, serializer: TasksSerializer
     end
